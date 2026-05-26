@@ -11,7 +11,7 @@
 #
 # Avoid / disabled by default on free:
 #   - Custom all-purpose clusters (not available)
-#   - GROQ API (outbound network restricted — use rule-based FE)
+#   - GROQ API (outbound may be restricted on some free workspaces — rule-based fallback if call fails)
 #   - GPU model serving
 #   - Multi-task jobs with 10+ tasks (job task quota)
 #   - Asset bundle production targets requiring account console

@@ -83,6 +83,12 @@ def run(sample_n: int | None = 50000) -> Path:
     target = "responder_flag"
     stats = _univariate_stats(train, target, max_cols=cfg["groq"].get("max_columns_per_request", 80))
     decisions = groq_feature_decisions(stats, cfg["campaign"]["product_code"], cfg["client"]["id"])
+    n_groq = sum(1 for d in decisions if d.get("reason") not in ("rule_fallback", None))
+    print(
+        f"Feature engineering: GROQ model={cfg['groq']['model']} "
+        f"({n_groq}/{len(decisions)} columns via LLM; rest rule fallback). "
+        "Audit: gold_groq_fe_audit"
+    )
 
     min_iv = float(idx_cfg.get("min_information_value", 0.02))
     fe_train, index_report, artifacts = fit_and_apply_indexing(

@@ -47,7 +47,12 @@ def bootstrap_notebook(project_root: Path | None = None) -> dict[str, str]:
         dbu.widgets.text("uc_schema", schema(), "Schema")
         default_rows = "100000" if is_free_edition() else os.environ.get("FMG_ROW_COUNT", "5000000")
         dbu.widgets.text("row_count", default_rows, "Rows (synthetic / sample)")
-        groq_default = "false" if is_free_edition() else "true"
+        from src.config_loader import load_settings
+
+        settings_groq_on = bool(load_settings().get("groq", {}).get("enabled", True))
+        tier_groq_on = bool(free_tier_defaults().get("groq_enabled", settings_groq_on))
+        # Default ON when config says enabled (user key via groq_secrets.local.py / env / secret scope)
+        groq_default = "true" if (settings_groq_on and tier_groq_on) else "false"
         dbu.widgets.dropdown("use_groq", groq_default, ["true", "false"], "GROQ FE")
 
         if dbu.widgets.get("edition") == "free":

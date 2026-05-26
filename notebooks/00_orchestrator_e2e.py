@@ -4,7 +4,7 @@
 # MAGIC Single serverless run: synthetic → steps 01–08 → MLflow → SQL KPIs.
 # MAGIC Saves job-task quota vs multi-task workflow.
 # MAGIC
-# MAGIC **Free Edition tips:** keep `row_count` ≤ 100k; leave GROQ off (rule-based FE).
+# MAGIC **Free Edition tips:** keep `row_count` ≤ 100k. GROQ FE is **on by default** when `groq.enabled` in config and API key is set (`src/groq_secrets.local.py` or secret scope `fmg`).
 
 # COMMAND ----------
 # MAGIC %pip install -r ../requirements-databricks.txt -q

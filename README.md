@@ -149,7 +149,7 @@ Free Edition is **serverless-only** with quotas. This repo ships a profile that 
 | **Jobs (1 task)** | Yes | `fmg_free_e2e` → `00_orchestrator_e2e.py` (saves task quota) |
 | **SQL / %sql KPIs** | Yes | End of orchestrator + `sql/02_free_edition_setup.sql` |
 | **Lakeflow / DLT** | Quota | Inline in orchestrator (no separate DLT job by default) |
-| **GROQ API** | Often blocked | **Off by default** — rule-based feature engineering |
+| **GROQ API** | May be blocked on some workspaces | **On by default** when key is set; rule-based fallback only if API fails |
 | **Custom clusters** | No | Job YAML has no `job_cluster_key` (serverless) |
 | **GPU model serving** | No | Step 09 skipped on free tier |
 | **Feature Store** | Quota | Off — use `gold_feature_matrix` Delta table |
