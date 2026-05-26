@@ -1,0 +1,32 @@
+# Step 8 — Names selection (aligned with legacy LOL + rank-mix transcripts)
+# Manual overrides: optional CSV at config/manual_selection_overrides.csv
+# Columns: segment_id, max_decile (0-9), top_pct_within_segment (0.0-1.0)
+
+selection:
+  mode: automated  # automated | manual_csv
+  manual_overrides_path: config/manual_selection_overrides.csv
+
+  # Default: per segment, mail top X% by rank_mix within segment (transcript ~40%)
+  top_pct_within_segment: 0.40
+
+  # LOL grid: include deciles 0..max_decile per segment (0 = best decile)
+  default_max_decile_by_segment:
+    under_35: 5
+    age_35_50: 4
+    over_50: 6
+    ALL: 4
+
+  # Transcript: "news" names often need deeper mail than model score alone
+  boost_news_names:
+    enabled: true
+    news_p_extra_deciles: 1
+    news_d_extra_deciles: 1
+
+  # Overall mail quantity cap (optional); null = no global cap
+  global_mail_quantity_cap: null
+
+  # Auto-job PPPM trim (legacy: trim file to hit target PPPM)
+  pppm_trim:
+    enabled: false
+    target_pppm: 1.25
+    min_keep_pct: 0.15

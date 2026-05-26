@@ -1,0 +1,7 @@
+# Lakeview Dashboard — bind to SQL warehouse queries
+resources:
+  dashboards:
+    fmg_modeling_ops:
+      display_name: FMG Regional Bank Modeling Ops
+      warehouse_id: ${var.warehouse_id}
+      file_path: ../dashboards/fmg_modeling_dashboard.lvdash.json

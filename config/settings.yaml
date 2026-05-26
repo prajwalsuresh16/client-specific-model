@@ -1,0 +1,84 @@
+# FMG client-specific-model — runtime configuration
+# Override via env: FMG_ROW_COUNT, FMG_CLIENT_ID, GROQ_API_KEY, FMG_ALLOW_SYNTHETIC_RESPONDERS
+
+client:
+  id: REGIONAL_BANK
+  display_name: Regional Bank
+
+products:
+  - code: ADD
+    name: Accidental Death & Dismemberment
+  - code: HAP
+    name: Hospital Accident Protection
+  - code: RC
+    name: Recuperative Care
+  - code: TERM_LIFE
+    name: Term Life Insurance
+  - code: APP
+    name: Accidental Protection Plan
+
+campaign:
+  campaign_id: RB_2026_05_ADD
+  prior_campaign_id: RB_2026_02_ADD
+  product_code: ADD
+  cut_date: "2026-05-01"
+  prior_cut_date: "2026-02-01"
+
+paths:
+  project_root: .
+  regional_bank:
+    bronze: data/regional_bank/bronze
+    bronze_prior: data/regional_bank/bronze_prior
+    silver: data/regional_bank/silver
+    gold: data/regional_bank/gold
+  mlflow_tracking: ./mlruns
+
+synthetic:
+  row_count: 5000000
+  chunk_size: 250000
+  responder_positive_rate: 0.008
+  prior_responder_positive_rate: 0.012
+  random_seed: 42
+  generate_prior_campaign: true
+
+mrgal:
+  dedupe_keys: [bpid, campaign_id, client_id, product_code]
+  filter_to_marketable_only: false
+
+sample_prep:
+  allow_synthetic_responders: false
+  min_responders_for_training: 50
+  max_training_rows: 500000
+
+modeling:
+  holdout_fraction: 0.2
+  max_model_combinations: 500
+  rank_mix_top_k_models: 2
+  class_weight_responder_multiplier: 5.0
+  min_rows_per_tier: 500
+  algorithms:
+    - logistic_regression
+    - random_forest
+    - xgboost
+    - lightgbm
+    - catboost
+
+indexing:
+  n_bins: 10
+  min_information_value: 0.02
+  export_report: true
+
+validation:
+  min_auc: 0.55
+  primary_metric: auc
+  secondary_metric: pppm
+  use_rank_for_combo_validation: true
+  orthogonality_max_correlation: 0.85
+  stability_prior_weight: 0.15
+  segment_combo_cap: 200
+
+groq:
+  enabled: true
+  model: llama-3.3-70b-versatile
+  api_base: https://api.groq.com/openai/v1
+  max_columns_per_request: 80

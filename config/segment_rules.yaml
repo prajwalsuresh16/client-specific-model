@@ -1,0 +1,27 @@
+# Segment definitions for LOL / rank-mix / Step 8 selection
+segments:
+  age_bands:
+    - name: under_35
+      min: 0
+      max: 34
+    - name: age_35_50
+      min: 35
+      max: 50
+    - name: over_50
+      min: 51
+      max: 120
+
+  standard_flags:
+    - news_p_flag
+    - news_d_flag
+    - base_name_flag
+
+  optional_client_fields:
+    - account_open_days
+    - prior_promo_count_12m
+
+# Dimensions combined into segment_id for LOL list keys (client-specific recipes)
+lol_dimensions:
+  - age_band
+  - news_segment
+  - account_tenure_bucket

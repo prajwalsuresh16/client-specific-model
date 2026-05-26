@@ -1,0 +1,7 @@
+resources:
+  experiments:
+    fmg_regional_bank_modeling:
+      name: /Shared/fmg_regional_bank_modeling
+      tags:
+        project: client-specific-model
+        client: regional_bank

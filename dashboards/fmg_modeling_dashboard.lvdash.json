@@ -1,0 +1,48 @@
+{
+  "datasets": [
+    {
+      "name": "so_mail_kpis",
+      "displayName": "SO Mail KPIs",
+      "query": "SELECT campaign_id, COUNT(*) AS sd_rows, SUM(CASE WHEN keep_flag = 'Y' THEN 1 ELSE 0 END) AS mail_count FROM IDENTIFIER(:catalog || '.' || :schema || '.gold_so_output') GROUP BY campaign_id"
+    },
+    {
+      "name": "validation_top_combos",
+      "displayName": "Top Model Combinations",
+      "query": "SELECT combo_id, model_a, model_b, auc, pppm_score FROM IDENTIFIER(:catalog || '.' || :schema || '.gold_validation_results') WHERE segment_id = 'ALL' ORDER BY auc DESC LIMIT 20"
+    },
+    {
+      "name": "lol_grid",
+      "displayName": "List of Lists Grid",
+      "query": "SELECT segment_id, decile, name_count, mean_rank_mix FROM IDENTIFIER(:catalog || '.' || :schema || '.gold_list_of_lists') ORDER BY segment_id, decile"
+    }
+  ],
+  "pages": [
+    {
+      "name": "modeling_overview",
+      "displayName": "FMG Modeling Overview",
+      "tiles": [
+        {
+          "visualization": {
+            "type": "COUNTER",
+            "name": "mail_count",
+            "queries": ["so_mail_kpis"]
+          }
+        },
+        {
+          "visualization": {
+            "type": "BAR",
+            "name": "auc_by_combo",
+            "queries": ["validation_top_combos"]
+          }
+        },
+        {
+          "visualization": {
+            "type": "HEATMAP",
+            "name": "lol_heatmap",
+            "queries": ["lol_grid"]
+          }
+        }
+      ]
+    }
+  ]
+}

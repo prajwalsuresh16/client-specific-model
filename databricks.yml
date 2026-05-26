@@ -1,0 +1,55 @@
+# Databricks Asset Bundle — FMG client-specific-model (full platform integration)
+# Docs: https://docs.databricks.com/dev-tools/bundles/index.html
+#
+# Deploy: databricks bundle validate && databricks bundle deploy -t dev
+# Run job: databricks bundle run fmg_modeling_e2e -t dev
+
+bundle:
+  name: fmg-client-specific-model
+
+variables:
+  catalog:
+    description: Unity Catalog name
+    default: fmg_datahub
+  schema:
+    description: Schema for Regional Bank modeling
+    default: regional_bank
+  warehouse_id:
+    description: SQL Warehouse ID for SQL tasks & dashboards
+    default: ""
+  databricks_host:
+    description: Workspace URL (https://adb-xxx.azuredatabricks.net)
+    default: https://adb-placeholder.azuredatabricks.net
+  notification_email:
+    description: Job failure alert email
+    default: ""
+
+include:
+  - resources/*.yml
+
+targets:
+  free:
+    mode: development
+    default: true
+    workspace:
+      host: ${var.databricks_host}
+    variables:
+      catalog: main
+      schema: fmg_regional_bank
+      warehouse_id: ""
+
+  dev:
+    mode: development
+    workspace:
+      host: ${var.databricks_host}
+    variables:
+      catalog: fmg_datahub
+      schema: regional_bank_dev
+
+  prod:
+    mode: production
+    workspace:
+      host: ${var.databricks_host}
+    variables:
+      catalog: fmg_datahub
+      schema: regional_bank

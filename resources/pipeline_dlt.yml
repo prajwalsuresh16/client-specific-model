@@ -1,0 +1,15 @@
+resources:
+  pipelines:
+    fmg_medallion:
+      name: FMG Medallion Bronze-Silver DLT
+      catalog: ${var.catalog}
+      target: ${var.schema}
+      development: true
+      continuous: false
+      channel: CURRENT
+      libraries:
+        - notebook:
+            path: ../pipelines/dlt_medallion.py
+      configuration:
+        FMG_UC_CATALOG: ${var.catalog}
+        FMG_UC_SCHEMA: ${var.schema}

@@ -1,0 +1,57 @@
+# Databricks FREE EDITION — tuned for serverless-only, quotas, limited outbound network
+# Set: export FMG_DATABRICKS_TIER=free  (auto-detected on Free Edition workspaces when possible)
+#
+# Best features on Free Edition (supported & high value):
+#   - Unity Catalog + Delta tables
+#   - Serverless notebooks & Jobs (single orchestrator task)
+#   - MLflow experiment tracking (workspace registry fallback)
+#   - SQL cells / SQL editor queries for KPIs
+#   - Lakeflow-style pipeline via notebook chain (no separate DLT job — saves quota)
+#   - Widgets for campaign / row_count
+#
+# Avoid / disabled by default on free:
+#   - Custom all-purpose clusters (not available)
+#   - GROQ API (outbound network restricted — use rule-based FE)
+#   - GPU model serving
+#   - Multi-task jobs with 10+ tasks (job task quota)
+#   - Asset bundle production targets requiring account console
+
+edition: free
+
+unity_catalog:
+  # Free Edition includes UC — use workspace default catalog if unsure
+  catalog: main
+  schema: fmg_regional_bank
+  auto_detect_catalog: true
+  bronze_volume: ""  # Volumes optional; use DBFS Delta paths as fallback
+
+storage:
+  primary: uc_delta          # uc_delta | dbfs_delta
+  dbfs_base: dbfs:/FileStore/fmg/regional_bank
+
+sql_warehouse:
+  use_sql_editor: true       # Run KPI SQL in notebook (%sql), not separate warehouse job
+  warehouse_id: ""
+
+mlflow:
+  experiment_name: /Users/fmg_regional_bank_modeling
+  use_uc_registry: false     # Fallback to workspace Model Registry on free
+  register_models: true
+
+groq:
+  enabled: true              # Set false if outbound network blocks Groq on Free Edition
+  # Key: config/groq.local.yaml or src/groq_secrets.local.py (not committed)
+
+feature_store:
+  enabled: false             # Save quota; use Delta gold_feature_matrix instead
+
+model_serving:
+  enabled: false             # Optional; enable only if endpoint quota available
+
+lakeflow:
+  run_inline_in_orchestrator: true
+  separate_dlt_job: false
+
+job:
+  use_orchestrator_notebook: true
+  max_sample_rows: 100000    # Keep serverless runs fast

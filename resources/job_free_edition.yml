@@ -1,0 +1,13 @@
+# Free Edition: ONE serverless-friendly job (no custom clusters, no multi-task quota burn)
+resources:
+  jobs:
+    fmg_free_e2e:
+      name: FMG Regional Bank E2E (Free Edition)
+      max_concurrent_runs: 1
+      tasks:
+        - task_key: orchestrate_all
+          notebook_task:
+            notebook_path: ../notebooks/00_orchestrator_e2e.py
+            base_parameters:
+              edition: free
+          # No job_cluster_key → uses workspace serverless compute (Free Edition default)

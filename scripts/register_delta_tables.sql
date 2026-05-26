@@ -1,0 +1,6 @@
+-- Deprecated: use Asset Bundle SQL tasks instead.
+--   sql/00_setup_catalog.sql  — catalog, schema, volume
+--   sql/01_dashboard_kpis.sql — SQL warehouse dashboard queries
+--
+-- Unity Catalog tables are created automatically by pipeline steps via Delta saveAsTable
+-- when running on Databricks (see src/databricks/uc_io.py).

@@ -1,0 +1,7 @@
+resources:
+  quality_monitors:
+    fmg_so_row_count:
+      table_name: ${var.catalog}.${var.schema}.gold_so_output
+      output_schema_name: ${var.catalog}.${var.schema}
+      assets:
+        - gold_so_output

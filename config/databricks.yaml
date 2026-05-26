@@ -1,0 +1,77 @@
+# Databricks platform bindings — override per target in databricks.yml / cluster env
+# Env overrides: FMG_UC_CATALOG, FMG_UC_SCHEMA, FMG_SQL_WAREHOUSE_ID, FMG_VOLUME_CATALOG
+
+unity_catalog:
+  catalog: fmg_datahub
+  schema: regional_bank
+  bronze_volume: regional_bank_bronze_vol
+  models_schema: regional_bank_models
+
+sql_warehouse:
+  warehouse_id: ""  # e.g. abc123def456 — set in bundle target or Secrets
+  warehouse_name: fmg_sql_warehouse
+
+mlflow:
+  experiment_name: /Shared/fmg_regional_bank_modeling
+  experiment_id: ""  # optional; auto-created if empty
+  model_registry_prefix: fmg_regional_bank
+
+feature_store:
+  enabled: true
+  online_store: false
+  feature_table_prefix: fmg_rb
+
+model_serving:
+  enabled: true
+  endpoint_name: fmg-regional-bank-rank-mix
+  workload_size: Small
+  scale_to_zero: true
+
+lakeflow:
+  pipeline_name: fmg_medallion_bronze_silver
+  continuous: false
+  development: true
+
+job:
+  name: fmg_regional_bank_modeling_e2e
+  cluster:
+    spark_version: "15.4.x-scala2.12"
+    node_type_id: Standard_DS4_v2
+    num_workers: 2
+    spark_conf:
+      spark.databricks.delta.preview.enabled: "true"
+
+alerts:
+  job_failure_email: ""  # set for production
+
+tables:
+  bronze_sd: bronze_sd
+  bronze_stat_promo: bronze_stat_promo
+  bronze_stat_membership: bronze_stat_membership
+  bronze_stat_demo: bronze_stat_demo
+  bronze_mrgal: bronze_mrgal
+  bronze_responders: bronze_responders
+  bronze_prior_sd: bronze_prior_sd
+  bronze_so: bronze_so
+  silver_mrgal: silver_mrgal
+  silver_mrgal_prior: silver_mrgal_prior
+  silver_mrgal_qc: silver_mrgal_qc
+  gold_training_sample: gold_training_sample
+  gold_validation_sample: gold_validation_sample
+  gold_scoring_population: gold_scoring_population
+  gold_sample_prep_meta: gold_sample_prep_meta
+  gold_feature_matrix: gold_feature_matrix
+  gold_index_report: gold_index_report
+  gold_groq_fe_audit: gold_groq_fe_audit
+  gold_model_predictions: gold_model_predictions
+  gold_validation_results: gold_validation_results
+  gold_validation_results_prior: gold_validation_results_prior
+  gold_gain_table: gold_gain_table
+  gold_auto_recommendation: gold_auto_recommendation
+  gold_scored_records: gold_scored_records
+  gold_qc_segment_report: gold_qc_segment_report
+  gold_list_of_lists: gold_list_of_lists
+  gold_lol_segment_catalog: gold_lol_segment_catalog
+  gold_so_output: gold_so_output
+  gold_selection_summary: gold_selection_summary
+  gold_feature_matrix_fmg_rb: gold_feature_matrix_fmg_rb

@@ -1,0 +1,27 @@
+# Large synthetic datasets (generate locally or on Databricks)
+data/regional_bank/bronze/**/*.parquet
+data/regional_bank/bronze_prior/**/*.parquet
+data/regional_bank/silver/**/*.parquet
+data/regional_bank/gold/**/*.parquet
+data/regional_bank/models/
+data/**/*.pkl
+data/**/index_artifacts.json
+# Keep schema manifests and small samples
+!data/**/schema_manifest.json
+!data/**/sample_*.parquet
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.mlflow/
+mlruns/
+catboost_info/
+.env
+config/groq.local.yaml
+src/groq_secrets.local.py
+*.log
+.databricks/
+bundle/
+.DS_Store
+.idea/
+.vscode/

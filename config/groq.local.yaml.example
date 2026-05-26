@@ -1,0 +1,5 @@
+# Copy to groq.local.yaml (gitignored) and set your key:
+#   copy config\groq.local.yaml.example config\groq.local.yaml
+#
+api_key: "gsk_your_key_here"
+enabled: true
