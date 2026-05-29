@@ -11,6 +11,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from src.id_keys import KEY_COLUMNS
+
 
 def _woe_iv(y: np.ndarray, x_binned: np.ndarray) -> tuple[float, dict[int, float]]:
     """Information Value and per-bin WOE for binary target."""
@@ -63,7 +65,7 @@ def fit_and_apply_indexing(
         raise ValueError(f"target {target} missing for indexing fit")
 
     y = train_df[target].fillna(0).astype(int).values
-    key_cols = [c for c in ["bpid", "campaign_id", "client_id", "cut_date", "product_code", target] if c in train_df.columns]
+    key_cols = [c for c in KEY_COLUMNS + [target] if c in train_df.columns]
     out = train_df[key_cols].copy()
     report_rows: list[dict] = []
     artifacts: list[dict] = []
@@ -116,7 +118,7 @@ def apply_indexing_artifacts(
     artifacts: list[dict],
     target: str | None = "responder_flag",
 ) -> pd.DataFrame:
-    key_cols = [c for c in ["bpid", "campaign_id", "client_id", "cut_date", "product_code"] if c in df.columns]
+    key_cols = [c for c in KEY_COLUMNS if c in df.columns]
     if target and target in df.columns:
         key_cols.append(target)
     out = df[key_cols].copy()

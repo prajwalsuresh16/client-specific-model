@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.schemas import KEY_COLUMNS
+from src.id_keys import KEY_COLUMNS, ensure_indiv_id
 
 MRGAL_KEYS = list(KEY_COLUMNS)
 
@@ -45,7 +45,7 @@ def apply_marketable_universe_rules(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def dedupe_mrgal(df: pd.DataFrame, subset: list[str] | None = None) -> pd.DataFrame:
-    subset = subset or ["bpid", "campaign_id", "client_id", "product_code"]
+    subset = subset or ["bpid", "indiv_id", "campaign_id", "client_id", "product_code"]
     present = [c for c in subset if c in df.columns]
     if not present:
         return df
@@ -59,10 +59,10 @@ def build_mrgal_from_bronze(
     sample_n: int | None = None,
     merge_reference_flags: Path | None = None,
 ) -> pd.DataFrame:
-    sd = _read_bronze_table(bronze_root, "bronze_sd", sample_n)
-    promo = _read_bronze_table(bronze_root, "bronze_stat_promo", sample_n)
-    member = _read_bronze_table(bronze_root, "bronze_stat_membership", sample_n)
-    demo = _read_bronze_table(bronze_root, "bronze_stat_demo", sample_n)
+    sd = ensure_indiv_id(_read_bronze_table(bronze_root, "bronze_sd", sample_n))
+    promo = ensure_indiv_id(_read_bronze_table(bronze_root, "bronze_stat_promo", sample_n))
+    member = ensure_indiv_id(_read_bronze_table(bronze_root, "bronze_stat_membership", sample_n))
+    demo = ensure_indiv_id(_read_bronze_table(bronze_root, "bronze_stat_demo", sample_n))
 
     keys = MRGAL_KEYS
     mrgal = sd.copy()

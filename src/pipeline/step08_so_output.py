@@ -13,6 +13,7 @@ from src.dataset_io import read_bronze, read_dataset, write_dataset
 from src.io_utils import ensure_dir
 from src.metrics import expected_pppm_score
 from src.segments import build_list_key, enrich_segment_columns
+from src.id_keys import KEY_COLUMNS
 
 
 def _load_selection_rules() -> dict:
@@ -141,10 +142,9 @@ def run() -> Path:
         lambda r: build_list_key(str(r[seg_col]), r["decile"]),
         axis=1,
     )
-
-    keys = ["bpid", "campaign_id", "client_id", "cut_date", "product_code"]
+    keys = list(KEY_COLUMNS)
     so = sd[keys].merge(
-        scored[["bpid", "rank_mix_score", "keep_flag", "list_key", "decile", "segment_id"]],
+        scored[["bpid", "indiv_id", "rank_mix_score", "keep_flag", "list_key", "decile", "segment_id"]],
         on="bpid",
         how="left",
     )

@@ -2,7 +2,7 @@
 Chunked synthetic data generation for Regional Bank.
 
 Writes parquet partitions under data/regional_bank/bronze/.
-Default row_count from settings.yaml (5_000_000); override with FMG_ROW_COUNT.
+Default row_count from settings.yaml or FMG_ROW_COUNT; Kanban scripts default 10_000_000 per table.
 """
 
 from __future__ import annotations
@@ -43,8 +43,10 @@ def _base_keys(
     prior: bool = False,
 ) -> dict:
     camp = cfg["campaign"]
+    bpids = _bpid_series(n, start_index, client_id[:3])
     return {
-        "bpid": _bpid_series(n, start_index, client_id[:3]),
+        "bpid": bpids,
+        "indiv_id": bpids.copy(),
         "campaign_id": np.full(n, camp["prior_campaign_id"] if prior else camp["campaign_id"], dtype=object),
         "client_id": np.full(n, client_id, dtype=object),
         "cut_date": np.full(n, camp.get("prior_cut_date", camp["cut_date"]) if prior else camp["cut_date"], dtype=object),

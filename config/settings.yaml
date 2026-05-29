@@ -42,7 +42,7 @@ synthetic:
   generate_prior_campaign: true
 
 mrgal:
-  dedupe_keys: [bpid, campaign_id, client_id, product_code]
+  dedupe_keys: [bpid, indiv_id, campaign_id, client_id, product_code]
   filter_to_marketable_only: false
 
 sample_prep:

@@ -1,9 +1,9 @@
 {
   "client_id": "REGIONAL_BANK",
-  "row_count": 50000,
+  "row_count": 10000000,
   "bronze_subdir": "bronze",
   "prior_campaign": false,
-  "campaign_id": "RB_2026_05_ADD",
+  "campaign_id": "RB_202605_1779888933890",
   "files": {
     "sd": "C:\\Users\\prajwalsuresh\\Downloads\\POC\\client-specific-model\\data\\regional_bank\\bronze\\bronze_sd",
     "bronze_stat_promo": "C:\\Users\\prajwalsuresh\\Downloads\\POC\\client-specific-model\\data\\regional_bank\\bronze\\bronze_stat_promo",
@@ -20,6 +20,7 @@
   },
   "sd_columns": [
     "bpid",
+    "indiv_id",
     "campaign_id",
     "client_id",
     "cut_date",

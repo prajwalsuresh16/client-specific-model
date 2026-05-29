@@ -1,0 +1,53 @@
+resources:
+  jobs:
+    fmg_silver_to_gold:
+      name: FMG Kanban Silver to Gold
+      job_clusters:
+        - job_cluster_key: modeling_cluster
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: Standard_DS4_v2
+            num_workers: 2
+      tasks:
+        - task_key: step02_sample_prep
+          depends_on: []
+          job_cluster_key: modeling_cluster
+          notebook_task:
+            notebook_path: ../notebooks/02_auto_sample_prep.py
+        - task_key: step03_modeling
+          depends_on: [{ task_key: step02_sample_prep }]
+          job_cluster_key: modeling_cluster
+          notebook_task:
+            notebook_path: ../notebooks/03_feature_engineering_and_live_modeling.py
+        - task_key: step04_validation
+          depends_on: [{ task_key: step03_modeling }]
+          job_cluster_key: modeling_cluster
+          notebook_task:
+            notebook_path: ../notebooks/04_auto_validation_framework.py
+        - task_key: step05_recommendation
+          depends_on: [{ task_key: step04_validation }]
+          job_cluster_key: modeling_cluster
+          notebook_task:
+            notebook_path: ../notebooks/05_auto_recommendations.py
+        - task_key: step06_rank_mix
+          depends_on: [{ task_key: step05_recommendation }]
+          job_cluster_key: modeling_cluster
+          notebook_task:
+            notebook_path: ../notebooks/06_dynamic_rank_mix_scoring.py
+        - task_key: step07_lol
+          depends_on: [{ task_key: step06_rank_mix }]
+          job_cluster_key: modeling_cluster
+          notebook_task:
+            notebook_path: ../notebooks/07_auto_lol_generation.py
+        - task_key: step08_so_output
+          depends_on: [{ task_key: step07_lol }]
+          job_cluster_key: modeling_cluster
+          notebook_task:
+            notebook_path: ../notebooks/08_names_selection_and_so_load.py
+      parameters:
+        - name: campaign_month
+          default: "202605"
+        - name: uc_catalog
+          default: ${var.catalog}
+        - name: uc_schema
+          default: ${var.schema}

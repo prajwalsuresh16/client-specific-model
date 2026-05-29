@@ -11,7 +11,7 @@ import yaml
 
 from src.config_loader import resolve_path
 
-KEY_COLUMNS = ["bpid", "campaign_id", "client_id", "cut_date", "product_code"]
+from src.id_keys import KEY_COLUMNS
 
 
 def load_segment_rules() -> dict[str, Any]:

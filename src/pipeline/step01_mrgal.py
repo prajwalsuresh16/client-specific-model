@@ -9,10 +9,12 @@ import pandas as pd
 from src.config_loader import load_settings, resolve_path
 from src.dataset_io import read_dataset, write_dataset
 from src.mrgal_builder import build_mrgal_from_bronze, dedupe_mrgal
+from src.id_keys import KEY_COLUMNS
 
 
 def _finalize_mrgal(df: pd.DataFrame, cfg: dict, label: str) -> pd.DataFrame:
-    dedupe_keys = cfg.get("mrgal", {}).get("dedupe_keys", ["bpid", "campaign_id", "client_id", "product_code"])
+    default_keys = [c for c in KEY_COLUMNS if c != "cut_date"]
+    dedupe_keys = cfg.get("mrgal", {}).get("dedupe_keys", default_keys)
     out = dedupe_mrgal(df, subset=dedupe_keys)
     if cfg.get("mrgal", {}).get("filter_to_marketable_only", False):
         out = out[out["marketable_flag"] == 1].copy()

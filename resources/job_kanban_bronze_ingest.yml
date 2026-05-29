@@ -1,0 +1,36 @@
+# Kanban bronze ingestion — UC Volume CSV/zip → Delta bronze tables
+resources:
+  jobs:
+    fmg_bronze_ingest:
+      name: FMG Kanban Bronze Ingest
+      job_clusters:
+        - job_cluster_key: ingest_cluster
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: Standard_DS4_v2
+            num_workers: 2
+            spark_conf:
+              spark.databricks.cluster.profile: singleNode
+              spark.master: local[*]
+      tasks:
+        - task_key: bronze_volume_to_delta
+          job_cluster_key: ingest_cluster
+          notebook_task:
+            notebook_path: ../notebooks/kanban_bronze_volume_ingest.py
+            base_parameters:
+              campaign_month: "{{job.parameters.campaign_month}}"
+              campaign_id: "{{job.parameters.campaign_id}}"
+              uc_catalog: "{{job.parameters.uc_catalog}}"
+              uc_schema: "{{job.parameters.uc_schema}}"
+              volume_path: "{{job.parameters.volume_path}}"
+      parameters:
+        - name: campaign_month
+          default: "202605"
+        - name: campaign_id
+          default: "0"
+        - name: uc_catalog
+          default: ${var.catalog}
+        - name: uc_schema
+          default: ${var.schema}
+        - name: volume_path
+          default: ""

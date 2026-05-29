@@ -28,7 +28,7 @@ def dlt_bronze_sd():
 def dlt_silver_mrgal_live():
     sd = dlt.read("dlt_bronze_sd")
     promo = spark.table(_table("bronze_stat_promo"))
-    keys = ["bpid", "campaign_id", "client_id", "cut_date", "product_code"]
+    keys = ["bpid", "indiv_id", "campaign_id", "client_id", "cut_date", "product_code"]
     out = sd
     for stat, suffix in [(promo, "_promo")]:
         stat_cols = [c for c in stat.columns if c not in keys]

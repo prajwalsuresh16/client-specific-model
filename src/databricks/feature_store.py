@@ -34,7 +34,7 @@ def publish_feature_table(
     fqn = table_fqn(fs_logical)
 
     fe = FeatureEngineeringClient()
-    keys = primary_keys or [c for c in ("bpid", "campaign_id") if c in df.columns]
+    keys = primary_keys or [c for c in ("bpid", "indiv_id", "campaign_id") if c in df.columns]
     spark = __import__("src.databricks.runtime", fromlist=["get_spark"]).get_spark()
     spark_df = spark.createDataFrame(df)
 

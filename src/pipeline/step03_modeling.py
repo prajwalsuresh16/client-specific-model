@@ -19,10 +19,13 @@ from src.dataset_io import read_dataset, write_dataset
 from src.groq_fe import groq_feature_decisions, _univariate_stats
 from src.indexing import apply_indexing_artifacts, fit_and_apply_indexing
 from src.io_utils import ensure_dir
+from src.modeling_accel import log_shap_summary, tune_classifier
+
+from src.id_keys import KEY_COLUMNS, MODELING_EXCLUDE
 
 
 def _feature_columns(df: pd.DataFrame) -> list[str]:
-    exclude = {"bpid", "campaign_id", "client_id", "cut_date", "product_code", "responder_flag", "premium_amount"}
+    exclude = MODELING_EXCLUDE
     return [c for c in df.columns if c not in exclude and pd.api.types.is_numeric_dtype(df[c])]
 
 
@@ -128,7 +131,11 @@ def run(sample_n: int | None = 50000) -> Path:
             model_name = f"{tier}_{algo}"
             with mlflow.start_run(run_name=model_name):
                 model = _build_model(algo, cfg)
+                best = tune_classifier(algo, X, y, cfg)
+                if best:
+                    model.set_params(**best)
                 model.fit(X, y)
+                log_shap_summary(model, X[: min(500, len(X))], features, models_dir / "shap" / model_name)
                 log_sklearn_model_to_uc(
                     model,
                     artifact_path=model_name,
@@ -160,7 +167,7 @@ def run(sample_n: int | None = 50000) -> Path:
         artifacts = json.loads(artifacts_path.read_text(encoding="utf-8"))
     fe_score = apply_indexing_artifacts(scoring, artifacts, target=None)
 
-    key_cols = [c for c in ("bpid", "campaign_id", "client_id", "cut_date", "product_code") if c in scoring.columns]
+    key_cols = [c for c in KEY_COLUMNS if c in scoring.columns]
     score_out = scoring[key_cols].copy()
 
     for pkl in sorted(models_dir.glob("*.pkl")):

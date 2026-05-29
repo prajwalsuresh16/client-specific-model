@@ -10,6 +10,7 @@ import pandas as pd
 
 from src.config_loader import load_settings, resolve_path
 from src.dataset_io import read_bronze_prior, read_dataset, write_dataset
+from src.id_keys import KEY_COLUMNS
 
 
 def _resample_balanced(df: pd.DataFrame, target: str, max_rows: int, seed: int) -> pd.DataFrame:
@@ -26,7 +27,7 @@ def _resample_balanced(df: pd.DataFrame, target: str, max_rows: int, seed: int) 
 
 
 def _attach_responders(mrgal: pd.DataFrame, responders: pd.DataFrame) -> pd.DataFrame:
-    keys = ["bpid", "campaign_id", "client_id", "cut_date", "product_code"]
+    keys = list(KEY_COLUMNS)
     rcols = keys + ["responder_flag", "premium_amount"]
     labeled = mrgal.merge(responders[rcols].drop_duplicates(subset=keys), on=keys, how="left")
     if labeled["responder_flag"].notna().sum() < 10:

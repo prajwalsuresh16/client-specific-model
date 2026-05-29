@@ -26,6 +26,7 @@ variables:
 
 include:
   - resources/*.yml
+  - resources/job_kanban_*.yml
 
 targets:
   free:

@@ -1,0 +1,9 @@
+# Kanban / MDM suppressions — extend when Acxiom rules are delivered
+global_flags:
+  - deceased_suppressed_flag
+  - bad_address_flag
+  - dnc_flag
+  - existing_product_suppressed_flag
+  - max_coverage_reached_flag
+product_code_blocks: []
+drop_deceased: true

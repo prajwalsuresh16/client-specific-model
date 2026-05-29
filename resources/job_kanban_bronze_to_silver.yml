@@ -1,0 +1,26 @@
+resources:
+  jobs:
+    fmg_bronze_to_silver:
+      name: FMG Kanban Bronze to Silver
+      job_clusters:
+        - job_cluster_key: modeling_cluster
+          new_cluster:
+            spark_version: 15.4.x-scala2.12
+            node_type_id: Standard_DS4_v2
+            num_workers: 2
+      tasks:
+        - task_key: step01_mrgal
+          job_cluster_key: modeling_cluster
+          notebook_task:
+            notebook_path: ../notebooks/01_auto_mrgal_creation.py
+            base_parameters:
+              campaign_month: "{{job.parameters.campaign_month}}"
+              uc_catalog: "{{job.parameters.uc_catalog}}"
+              uc_schema: "{{job.parameters.uc_schema}}"
+      parameters:
+        - name: campaign_month
+          default: "202605"
+        - name: uc_catalog
+          default: ${var.catalog}
+        - name: uc_schema
+          default: ${var.schema}

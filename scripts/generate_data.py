@@ -16,12 +16,11 @@ from src.synthetic_data import generate_regional_bank
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--rows", type=int, default=None, help="Override row count (default settings.yaml)")
+    p.add_argument("--rows", type=int, default=10_000_000, help="Row count per bronze table (default 10M)")
     p.add_argument("--no-prior", action="store_true", help="Skip prior-campaign bronze tables")
     args = p.parse_args()
 
-    if args.rows:
-        os.environ["FMG_ROW_COUNT"] = str(args.rows)
+    os.environ["FMG_ROW_COUNT"] = str(args.rows)
 
     print("Generating Regional Bank bronze data...")
     paths = generate_regional_bank(include_prior=not args.no_prior)

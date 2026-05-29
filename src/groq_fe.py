@@ -17,6 +17,7 @@ import pandas as pd
 
 from src.config_loader import load_settings
 from src.groq_credentials import get_groq_api_key
+from src.id_keys import KEY_COLUMNS
 
 
 def _univariate_stats(df: pd.DataFrame, target: str, max_cols: int = 80) -> list[dict]:
@@ -118,7 +119,7 @@ def apply_feature_engineering(
     target: str = "responder_flag",
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     keep_cols = [d["column_name"] for d in decisions if d.get("keep")]
-    key_cols = [c for c in ["bpid", "campaign_id", "client_id", "cut_date", "product_code", target] if c in df.columns]
+    key_cols = [c for c in KEY_COLUMNS + [target] if c in df.columns]
     use = list(dict.fromkeys(key_cols + keep_cols))
 
     out = df[use].copy()
